@@ -1,0 +1,21 @@
+{
+  "dependencies": {},
+  "description": "Quivers Graphhub connector for AngularJS",
+  "devDependencies": {
+    "angular": "1.5.3",
+    "apollo-client": "^1.8.0"
+  },
+  "files": [
+    "index.js"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "maintainers": [
+    {
+      "name": "Brendan Johnson",
+      "email": "brendan@quivers.com"
+    }
+  ],
+  "name": "angular-graphhub",
+  "version": "1.0.0"
+}
