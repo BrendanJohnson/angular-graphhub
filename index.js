@@ -35,4 +35,4 @@
 					return new apolloClient({ networkInterface: networkInterface });
 				};
 			});
- });
+ }));
