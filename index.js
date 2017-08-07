@@ -12,7 +12,7 @@
 }(function (angular) {
   'use strict';
   angular.module('angular-graphhub', [])
-  		 .provider('graphhub', function () {
+  		 .provider('$graphhub', function () {
 				var apolloClient = require('apollo-client').ApolloClient;
 				var networkInterface = null	
 
