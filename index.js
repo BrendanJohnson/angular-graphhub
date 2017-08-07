@@ -16,22 +16,22 @@
 				var apolloClient = require('apollo-client').ApolloClient;
 				var networkInterface = null	
 
-				this.setNetworkInterface = function (uri, apikey) {
+				this.setNetworkInterface = function(uri, apikey) {
 					networkInterface = require('apollo-client')
 										.createNetworkInterface({
 											uri: uri,		
 										})
 										.use([{
-												applyMiddleware(req, next) {
-													req.options.headers = {
-												      authentication: apikey
-													}; 
-													next();
-												}
-										}]);
+										    applyMiddleware: function applyMiddleware(req, next) {
+										      req.options.headers = {
+										        authentication: apikey
+										      };
+										      next();
+										    }
+										  }]);
 				};
 
-				this.$get = function () {
+				this.$get = function() {
 					return new apolloClient({ networkInterface: networkInterface });
 				};
 			});
