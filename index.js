@@ -11,25 +11,28 @@
   }
 }(function (angular) {
   'use strict';
+  var graphhubUri = null;
+	
   angular.module('angular-graphhub', [])
   		 .provider('$graphhub', function () {
 				var apolloClient = require('apollo-client').ApolloClient;
 				var networkInterface = null	
 
 				this.setNetworkInterface = function(uri, apikey) {
-					networkInterface = require('apollo-client').createNetworkInterface({
-														uri: uri,		
-													});
-					if(apikey) {
-						networkInterface.use([{
-						    applyMiddleware: function applyMiddleware(req, next) {
-						      req.options.headers = {
-						        authentication: apikey
-						      };
-						      next();
-						    }
-						  }]);
-					}
+					graphhubUri = uri;
+					networkInterface = require('apollo-client')
+								.createNetworkInterface({
+									uri: graphhubUri + 'quivers-graphhub',		
+								})
+								.use([{
+									applyMiddleware: function applyMiddleware(req, next) {
+											      req.options.headers = {
+											        'Authorization': localStorage.getItem('graphhub-token') ? 'bearer ' + localStorage.getItem('graphhub-token') : null,
+											        'Content-Type': 'application/json'
+											      };
+											      next();
+											  }
+						  		}]);
 				};
 
 				this.$get = function() {
@@ -38,18 +41,11 @@
 			})
 	  	.decorator('$graphhub', ['$delegate', '$http', function ($delegate, $http) {
   		 	$delegate.login = function (email, password) {
-  		 		$http.post($delegate.networkInterface._uri + 'apiauth/signin',
-  		 					{ email: email, password: password })
-  		 			 	.then(function (response) {
-  		 					$delegate.networkInterface.use([{
-							    applyMiddleware: function applyMiddleware(req, next) {
-							      req.options.headers = {
-							        'Authorization': 'Bearer ' + response.data.token
-							      };
-							      next();
-							    }
-							}]);
-  		 				});
+  		 		$http.post(graphhubUri + 'apiauth/signin',
+  		 				{ email: email, password: password })
+  		 			.then(function (response) {
+  		 			 	localStorage.setItem('graphhub-token', response.data.token)
+  		 			});
   		 	};
   		 	return $delegate;
   		 }]);
