@@ -41,10 +41,11 @@
 			})
 	  	.decorator('$graphhub', ['$delegate', '$http', function ($delegate, $http) {
   		 	$delegate.login = function (email, password) {
-  		 		$http.post(graphhubUri + 'apiauth/signin',
+  		 		return $http.post(graphhubUri + 'apiauth/signin',
   		 				{ email: email, password: password })
   		 			.then(function (response) {
-  		 			 	localStorage.setItem('graphhub-token', response.data.token)
+  		 			 	localStorage.setItem('graphhub-token', response.data.token);
+						return response;
   		 			});
   		 	};
   		 	return $delegate;
